@@ -30,7 +30,7 @@ jobs:
     permissions:
       id-token: write # requis pour le trusted publishing PyPI (OIDC), pas de token à gérer
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
