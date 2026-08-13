@@ -2,12 +2,13 @@
 
 ## Versions supportées
 
-`django-signals-all` est en développement initial (`0.x`) : seule la
-dernière version publiée reçoit des correctifs de sécurité.
+`django-signals-all` est en pré-version `1.0.0rc1` : seule la dernière
+version publiée reçoit des correctifs de sécurité.
 
-| Version | Supportée |
-| ------- | --------- |
-| 0.x     | ✅        |
+| Version    | Supportée |
+| ---------- | --------- |
+| 1.0.0rcN   | ✅        |
+| < 1.0.0rc1 | ❌        |
 
 ## Signaler une vulnérabilité
 

@@ -7,6 +7,12 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [Unreleased]
 
+## [1.0.0rc1] - 2026-08-13
+
+Première version publique (release candidate). Aucune version antérieure
+n'a été publiée sur PyPI — le développement `0.x` est resté interne à ce
+dépôt.
+
 ### Added
 
 - Module ORM (`django_signals_all.orm`) : `BulkSignalQuerySet` et
@@ -26,4 +32,5 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   et CI multi-SGBD).
 - Package entièrement typé (`mypy --strict` avec `django-stubs`).
 
-[Unreleased]: https://github.com/alzeph/django-signals-all/compare/main...HEAD
+[Unreleased]: https://github.com/alzeph/django-signals-all/compare/v1.0.0rc1...HEAD
+[1.0.0rc1]: https://github.com/alzeph/django-signals-all/releases/tag/v1.0.0rc1

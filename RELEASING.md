@@ -48,11 +48,24 @@ workflow GitHub Actions précis.
      défaut par `pip install django-signals-all`, il faudra
      `pip install django-signals-all --pre` ou fixer la version exacte).
 
-## Politique avant le 1.0.0 final
+## Politique release candidate avant le 1.0.0 final
 
-Voir la politique de compatibilité et de dépréciation dans
-[CONTRIBUTING.md](CONTRIBUTING.md#politique-de-compatibilité-et-dépréciation).
-Avant `1.0.0`, aucune garantie de stabilité de l'API publique n'est donnée ;
-en particulier, le module `pg_notify` (roadmap, voir README) n'existe pas
+`1.0.0rc1` est une *release candidate* : l'API est considérée figée mais
+n'a pas encore été éprouvée par un usage réel en dehors de ce dépôt.
+Avant de tagger `1.0.0` (final) :
+
+- laisser la RC disponible au moins quelques semaines pour recueillir des
+  retours (issues, cas d'usage réels, éventuels bugs sur le module SQL brut
+  ou l'agrégation des signaux `bulk_update`) ;
+- ne merger que des corrections de bug sur `main` pendant cette période,
+  pas de nouvelle fonctionnalité qui changerait l'API publique ;
+- si un changement d'API s'avère nécessaire suite aux retours, publier
+  `1.0.0rc2` plutôt que de modifier `1.0.0rc1` a posteriori.
+
+En particulier, le module `pg_notify` (roadmap, voir README) n'existe pas
 encore et pourra faire évoluer l'API des signaux existants s'il révèle un
-besoin de cohérence transversale.
+besoin de cohérence transversale — c'est aussi une raison de ne pas
+précipiter le passage en `1.0.0` final.
+
+Une fois `1.0.0` taggé, voir la politique de compatibilité dans
+[CONTRIBUTING.md](CONTRIBUTING.md#politique-de-compatibilité-et-dépréciation).

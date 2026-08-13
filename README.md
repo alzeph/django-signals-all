@@ -5,6 +5,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](pyproject.toml)
 
+> **Release candidate.** `django-signals-all` est en `1.0.0rc1` : l'API est
+> considérée figée mais n'a pas encore été éprouvée par un usage réel en
+> dehors de ce dépôt. Les retours (issues, cas d'usage, bugs) sont les
+> bienvenus avant de tagger la version `1.0.0` finale — voir
+> [RELEASING.md](RELEASING.md).
+
 Des signaux Django garantis, peu importe comment vous modifiez vos données.
 
 ## Le problème
