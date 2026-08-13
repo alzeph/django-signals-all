@@ -1,8 +1,17 @@
+from unittest.mock import patch
+
 from django.test import TestCase, override_settings
 
 from django_signals_all.signals import raw_sql_executed
 from tests.test_sql._helpers import post_sql
 from tests.testapp.models import Client as ClientModel
+
+
+class _AlwaysNoneEngine:
+    """Simule un moteur de parsing qui ne reconnaît jamais le SQL fourni."""
+
+    def parse(self, sql, vendor):
+        return None
 
 
 class RawSQLMiddlewareTests(TestCase):
@@ -73,6 +82,21 @@ class RawSQLMiddlewareTests(TestCase):
     def test_interceptor_disabled_via_settings(self):
         with override_settings(
             DJANGO_SIGNALS_ALL={"ENABLE_RAW_SQL_INTERCEPTOR": False}
+        ):
+            response = post_sql(
+                "INSERT INTO crm_client (name) VALUES (?)", params=["Ada"]
+            )
+
+        assert response.status_code == 200
+        assert self.received == []
+
+    def test_unrecognized_sql_by_parser_does_not_crash_or_emit(self):
+        # Simule un SQL que le moteur configuré ne sait pas analyser (parse()
+        # retourne None) : la requête HTTP doit aboutir normalement et aucun
+        # signal ne doit être émis.
+        with patch.dict(
+            "django_signals_all.sql.middleware._ENGINES",
+            {"sqlglot": _AlwaysNoneEngine()},
         ):
             response = post_sql(
                 "INSERT INTO crm_client (name) VALUES (?)", params=["Ada"]

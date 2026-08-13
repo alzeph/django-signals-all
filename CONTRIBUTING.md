@@ -18,7 +18,7 @@ uv sync
 uv run ruff check src tests
 uv run ruff format --check src tests
 uv run mypy
-uv run pytest
+uv run pytest --cov=django_signals_all --cov-report=term-missing
 ```
 
 La suite `pytest` tourne par défaut sur SQLite. Pour la faire tourner aussi
@@ -37,8 +37,10 @@ doivent toutes passer avant qu'une PR soit mergeable :
 - **ruff** : lint et formatage
 - **mypy** (`strict = true`, avec `django-stubs`) : le typage doit rester
   précis, y compris sur le code qui touche à l'ORM et aux signaux Django
-- **pytest** : sur les trois SGBD supportés (SQLite, PostgreSQL, MySQL) ;
-  toute nouvelle branche de code doit être testée
+- **pytest** : sur les trois SGBD supportés (SQLite, PostgreSQL, MySQL) et
+  contre Django 4.2/5.0/5.1/5.2 ; la couverture de tests est verrouillée à
+  100 % (`--cov-fail-under=100`) — toute nouvelle branche de code doit être
+  testée
 
 Si `pre-commit` est installé (`uv run pre-commit install`), ruff et mypy
 tournent automatiquement avant chaque commit.

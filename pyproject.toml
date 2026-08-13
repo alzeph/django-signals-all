@@ -22,6 +22,8 @@ classifiers = [
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
     "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
+    "Framework :: Django :: 6.1",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -58,6 +60,7 @@ dev = [
     "psycopg[binary]>=3.3.4",
     "mysqlclient>=2.2",
     "ruff>=0.6",
+    "pytest-cov>=7.1.0",
 ]
 
 [tool.pytest.ini_options]
@@ -76,6 +79,13 @@ select = ["E", "F", "W", "I", "UP", "B"]
 plugins = ["mypy_django_plugin.main"]
 strict = true
 files = ["src"]
+
+[tool.coverage.run]
+source = ["django_signals_all"]
+branch = true
+
+[tool.coverage.report]
+exclude_also = ["if TYPE_CHECKING:"]
 
 [tool.django-stubs]
 django_settings_module = "tests.settings"
