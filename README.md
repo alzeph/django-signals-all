@@ -168,7 +168,7 @@ uv run ruff format --check src tests
 uv run mypy
 
 # SQLite (par défaut, pas de dépendance externe)
-uv run pytest
+uv run pytest --cov=django_signals_all --cov-report=term-missing
 
 # PostgreSQL et MySQL (nécessite Docker)
 docker compose up -d

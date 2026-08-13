@@ -26,3 +26,11 @@ class ConfSettingsTests(SimpleTestCase):
     def test_invalid_setting_name_raises_attribute_error(self):
         with self.assertRaises(AttributeError):
             _ = app_settings.NOT_A_REAL_SETTING
+
+    def test_unrelated_setting_change_does_not_reload(self):
+        # Accède à FETCH_UPDATED_IDS pour le mettre en cache, puis change un
+        # réglage Django sans rapport (DEBUG) : le cache ne doit pas être
+        # invalidé, seul DJANGO_SIGNALS_ALL doit déclencher un reload().
+        assert app_settings.FETCH_UPDATED_IDS is True
+        with override_settings(DEBUG=True):
+            assert app_settings.FETCH_UPDATED_IDS is True

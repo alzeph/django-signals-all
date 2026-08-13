@@ -70,7 +70,7 @@ Sur cette branche :
 uv run ruff check src tests
 uv run ruff format --check src tests
 uv run mypy
-uv run pytest
+uv run pytest --cov=django_signals_all --cov-fail-under=100
 docker compose up -d
 DSA_TEST_DB=postgres uv run pytest
 DSA_TEST_DB=mysql uv run pytest
