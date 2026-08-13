@@ -1,0 +1,1 @@
+CREATE DATABASE django_signals_all_secondary;

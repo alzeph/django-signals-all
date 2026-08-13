@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: django_signals_all
+      POSTGRES_USER: django_signals_all
+      POSTGRES_PASSWORD: django_signals_all
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: django_signals_all
+      MYSQL_ROOT_PASSWORD: django_signals_all
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d:ro
