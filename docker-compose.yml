@@ -11,7 +11,7 @@ services:
       - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
 
   mysql:
-    image: mysql:8
+    image: mysql:26
     environment:
       MYSQL_DATABASE: django_signals_all
       MYSQL_ROOT_PASSWORD: django_signals_all
