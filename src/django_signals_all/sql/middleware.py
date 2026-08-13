@@ -1,14 +1,18 @@
 import contextlib
 import threading
+from collections.abc import Callable
+from typing import Any
 
 from django.db import connections
+from django.http import HttpRequest, HttpResponse
 
 from django_signals_all.conf import app_settings
 from django_signals_all.signals import raw_sql_executed
+from django_signals_all.sql.engines.base import ParseEngine
 from django_signals_all.sql.engines.regex_engine import RegexEngine
 from django_signals_all.sql.engines.sqlglot_engine import SqlglotEngine
 
-_ENGINES = {
+_ENGINES: dict[str, ParseEngine] = {
     "sqlglot": SqlglotEngine(),
     "regex": RegexEngine(),
 }
@@ -27,10 +31,10 @@ class RawSQLSignalMiddleware:
     n'est pas censée rester active en dehors d'un bloc `with`).
     """
 
-    def __init__(self, get_response):
+    def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request: HttpRequest) -> HttpResponse:
         if not app_settings.ENABLE_RAW_SQL_INTERCEPTOR:
             return self.get_response(request)
 
@@ -39,7 +43,14 @@ class RawSQLSignalMiddleware:
                 stack.enter_context(connection.execute_wrapper(self._wrap))
             return self.get_response(request)
 
-    def _wrap(self, execute, sql, params, many, context):
+    def _wrap(
+        self,
+        execute: Callable[[str, Any, bool, dict[str, Any]], Any],
+        sql: str,
+        params: Any,
+        many: bool,
+        context: dict[str, Any],
+    ) -> Any:
         result = execute(sql, params, many, context)
 
         if getattr(_local, "in_progress", False):

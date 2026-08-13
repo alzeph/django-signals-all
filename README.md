@@ -1,5 +1,10 @@
 # django-signals-all
 
+[![CI](https://github.com/alzeph/django-signals-all/actions/workflows/ci.yml/badge.svg)](https://github.com/alzeph/django-signals-all/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/django-signals-all.svg)](https://pypi.org/project/django-signals-all/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](pyproject.toml)
+
 Des signaux Django garantis, peu importe comment vous modifiez vos données.
 
 ## Le problème
@@ -147,10 +152,14 @@ SQL).
   `sqlglot`), jamais une exception propagée à l'application.
 - Le module `pg_notify` n'existe pas encore dans cette version.
 
-## Tests
+## Développement
 
 ```bash
 uv sync --group dev
+
+uv run ruff check src tests
+uv run ruff format --check src tests
+uv run mypy
 
 # SQLite (par défaut, pas de dépendance externe)
 uv run pytest
@@ -161,5 +170,13 @@ DSA_TEST_DB=postgres uv run pytest
 DSA_TEST_DB=mysql uv run pytest
 ```
 
-La CI (`.github/workflows/tests.yml`) exécute la suite complète sur les trois SGBD à
-chaque push.
+La CI (`.github/workflows/ci.yml`) exécute lint, typecheck (mypy `strict`) et la suite
+complète sur les trois SGBD à chaque push.
+
+Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour contribuer,
+[CHANGELOG.md](CHANGELOG.md) pour l'historique des versions, et
+[RELEASING.md](RELEASING.md) pour le process de publication.
+
+## Licence
+
+[MIT](LICENSE)

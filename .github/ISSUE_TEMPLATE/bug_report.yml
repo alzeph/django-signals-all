@@ -1,0 +1,65 @@
+name: Rapport de bug
+description: Signaler un comportement inattendu de django-signals-all
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Quel est le problème ?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: >
+        Un exemple minimal (modèle, receiver connecté, opération effectuée)
+        qui reproduit le problème.
+      render: python
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version de django-signals-all
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: django-version
+    attributes:
+      label: Version de Django
+      placeholder: "5.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: database
+    attributes:
+      label: Base de données
+      options:
+        - SQLite
+        - PostgreSQL
+        - MySQL
+        - Autre
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Version de Python
+      placeholder: "3.12"
+    validations:
+      required: true

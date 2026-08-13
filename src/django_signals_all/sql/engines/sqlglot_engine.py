@@ -14,12 +14,6 @@ _VENDOR_TO_DIALECT = {
     "sqlite": "sqlite",
 }
 
-_OPERATION_BY_EXP_TYPE = {
-    exp.Insert: "INSERT",
-    exp.Update: "UPDATE",
-    exp.Delete: "DELETE",
-}
-
 _NAMED_PLACEHOLDER_RE = re.compile(r"%\(\w+\)s")
 _POSITIONAL_PLACEHOLDER_RE = re.compile(r"%s")
 
@@ -52,8 +46,13 @@ class SqlglotEngine:
             )
             return None
 
-        operation = _OPERATION_BY_EXP_TYPE.get(type(tree))
-        if operation is None:
+        if isinstance(tree, exp.Insert):
+            operation = "INSERT"
+        elif isinstance(tree, exp.Update):
+            operation = "UPDATE"
+        elif isinstance(tree, exp.Delete):
+            operation = "DELETE"
+        else:
             return None
 
         target = tree.this

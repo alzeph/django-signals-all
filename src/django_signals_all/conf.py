@@ -1,9 +1,11 @@
+from typing import Any, cast
+
 from django.conf import settings
 from django.test.signals import setting_changed
 
 SETTINGS_KEY = "DJANGO_SIGNALS_ALL"
 
-DEFAULTS = {
+DEFAULTS: dict[str, Any] = {
     "FETCH_UPDATED_IDS": True,
     "MAX_FETCH_IDS_LIMIT": 10_000,
     "ENABLE_RAW_SQL_INTERCEPTOR": True,
@@ -16,15 +18,15 @@ DEFAULTS = {
 class Settings:
     """Accès paresseux au dict DJANGO_SIGNALS_ALL, invalidé par override_settings."""
 
-    def __init__(self, defaults):
+    def __init__(self, defaults: dict[str, Any]) -> None:
         self.defaults = defaults
-        self._cached_attrs = set()
+        self._cached_attrs: set[str] = set()
 
     @property
-    def user_settings(self):
-        return getattr(settings, SETTINGS_KEY, {})
+    def user_settings(self) -> dict[str, Any]:
+        return cast(dict[str, Any], getattr(settings, SETTINGS_KEY, {}))
 
-    def __getattr__(self, attr):
+    def __getattr__(self, attr: str) -> Any:
         if attr not in self.defaults:
             raise AttributeError(f"Réglage {SETTINGS_KEY} invalide : {attr!r}")
         try:
@@ -35,7 +37,7 @@ class Settings:
         setattr(self, attr, value)
         return value
 
-    def reload(self):
+    def reload(self) -> None:
         for attr in self._cached_attrs:
             delattr(self, attr)
         self._cached_attrs.clear()
@@ -44,7 +46,7 @@ class Settings:
 app_settings = Settings(DEFAULTS)
 
 
-def _reload_settings(*, setting, **kwargs):
+def _reload_settings(*, setting: str, **kwargs: Any) -> None:
     if setting == SETTINGS_KEY:
         app_settings.reload()
 

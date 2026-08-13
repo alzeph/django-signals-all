@@ -1,4 +1,8 @@
+from collections.abc import Collection, Iterable
+from typing import Any, cast
+
 from django.db import models, transaction
+from django.db.models import Model
 
 from django_signals_all.conf import app_settings
 from django_signals_all.signals import (
@@ -8,23 +12,25 @@ from django_signals_all.signals import (
 )
 
 
-class BulkSignalQuerySet(models.QuerySet):
+class BulkSignalQuerySet(models.QuerySet[Any]):
     """QuerySet émettant post_bulk_update/post_bulk_create/post_bulk_model_update.
 
     Les signaux sont envoyés via transaction.on_commit pour ne jamais être émis
     au titre d'une mutation finalement annulée par un rollback.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._signals_all_in_bulk_update = False
 
-    def _clone(self):
-        clone = super()._clone()
+    def _clone(self) -> "BulkSignalQuerySet":
+        # _clone() est une méthode interne non exposée par django-stubs, mais
+        # stable dans l'implémentation Django depuis longtemps.
+        clone = cast("BulkSignalQuerySet", super()._clone())  # type: ignore[misc]
         clone._signals_all_in_bulk_update = self._signals_all_in_bulk_update
         return clone
 
-    def update(self, **kwargs):
+    def update(self, **kwargs: Any) -> int:
         # bulk_update() ré-entre ici via self.using(self.db).filter(...).update(...) ;
         # dans ce cas le signal agrégé post_bulk_model_update suffit, on ne veut pas
         # émettre en plus un post_bulk_update par batch interne.
@@ -34,7 +40,7 @@ class BulkSignalQuerySet(models.QuerySet):
         if not post_bulk_update.has_listeners(sender=self.model):
             return super().update(**kwargs)
 
-        updated_ids = []
+        updated_ids: list[Any] = []
         if app_settings.FETCH_UPDATED_IDS:
             limit = app_settings.MAX_FETCH_IDS_LIMIT
             updated_ids = list(self.values_list("pk", flat=True)[:limit])
@@ -53,8 +59,23 @@ class BulkSignalQuerySet(models.QuerySet):
         )
         return rows_updated
 
-    def bulk_create(self, objs, **kwargs):
-        created = super().bulk_create(objs, **kwargs)
+    def bulk_create(
+        self,
+        objs: Iterable[Model],
+        batch_size: int | None = None,
+        ignore_conflicts: bool = False,
+        update_conflicts: bool = False,
+        update_fields: Collection[str] | None = None,
+        unique_fields: Collection[str] | None = None,
+    ) -> list[Any]:
+        created = super().bulk_create(
+            objs,
+            batch_size=batch_size,
+            ignore_conflicts=ignore_conflicts,
+            update_conflicts=update_conflicts,
+            update_fields=update_fields,
+            unique_fields=unique_fields,
+        )
 
         if post_bulk_create.has_listeners(sender=self.model):
             db = self.db
@@ -67,10 +88,15 @@ class BulkSignalQuerySet(models.QuerySet):
             )
         return created
 
-    def bulk_update(self, objs, fields, **kwargs):
+    def bulk_update(
+        self,
+        objs: Iterable[Model],
+        fields: Iterable[str],
+        batch_size: int | None = None,
+    ) -> int:
         self._signals_all_in_bulk_update = True
         try:
-            rows_updated = super().bulk_update(objs, fields, **kwargs)
+            rows_updated = super().bulk_update(objs, fields, batch_size=batch_size)
         finally:
             self._signals_all_in_bulk_update = False
 

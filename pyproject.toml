@@ -1,24 +1,58 @@
 [project]
 name = "django-signals-all"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Signaux Django garantis pour les opérations bulk et le SQL brut"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
+authors = [{ name = "Cédric Hervé Youan", email = "hervecedricyouan@gmail.com" }]
+keywords = [
+    "django",
+    "signals",
+    "bulk-update",
+    "bulk-create",
+    "raw-sql",
+    "cache-invalidation",
+    "audit-log",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
 dependencies = [
     "django>=4.2",
     "sqlglot>=25",
 ]
 
+[project.urls]
+Repository = "https://github.com/alzeph/django-signals-all"
+Changelog = "https://github.com/alzeph/django-signals-all/blob/main/CHANGELOG.md"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/django_signals_all/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/django_signals_all"]
 
 [dependency-groups]
 dev = [
+    "django-stubs>=5.1",
+    "mypy>=1.11",
+    "pre-commit>=3.8",
     "pytest>=8.0",
     "pytest-django>=4.8",
     "psycopg[binary]>=3.1",
@@ -37,3 +71,11 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+strict = true
+files = ["src"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
