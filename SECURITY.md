@@ -1,35 +1,37 @@
-# Politique de sécurité
+# Security policy
 
-## Versions supportées
+**English** | [Français](SECURITY.fr.md)
 
-`django-signals-all` est en pré-version `1.0.0rc1` : seule la dernière
-version publiée reçoit des correctifs de sécurité.
+## Supported versions
 
-| Version    | Supportée |
+`django-signals-all` is in the pre-release `1.0.0rc1`: only the latest
+published version receives security fixes.
+
+| Version    | Supported |
 | ---------- | --------- |
-| 1.0.0rcN   | ✅        |
-| < 1.0.0rc1 | ❌        |
+| 1.0.0rcN   | Yes       |
+| < 1.0.0rc1 | No        |
 
-## Signaler une vulnérabilité
+## Reporting a vulnerability
 
-Merci de **ne pas** ouvrir d'issue publique pour une faille de sécurité.
+Please **do not** open a public issue for a security flaw.
 
-Le module `django_signals_all.sql` analyse du SQL potentiellement contrôlé
-par des chemins applicatifs sensibles : toute faille permettant de
-contourner `EXCLUDED_TABLES`/`MONITORED_TABLES`, de provoquer un déni de
-service via le parsing, ou d'exécuter du code via un receiver mal isolé,
-est considérée comme une vulnérabilité de sécurité.
+The `django_signals_all.sql` module parses SQL that may be influenced by
+sensitive application code paths: any flaw that allows bypassing
+`EXCLUDED_TABLES`/`MONITORED_TABLES`, triggering a denial of service through
+parsing, or executing code via a poorly isolated receiver is considered a
+security vulnerability.
 
-Privilégiez le signalement privé via
+Please report privately via
 [GitHub Security Advisories](https://github.com/alzeph/django-signals-all/security/advisories/new)
-sur ce dépôt. À défaut, contactez l'auteur directement à
+on this repository. Failing that, contact the author directly at
 hervecedricyouan@gmail.com.
 
-Merci d'inclure :
+Please include:
 
-- une description du problème et de son impact potentiel ;
-- les étapes pour le reproduire ;
-- la version de `django-signals-all`, de Django et le SGBD concernés.
+- a description of the issue and its potential impact;
+- steps to reproduce it;
+- the version of `django-signals-all`, of Django, and the database involved.
 
-Nous accusons réception sous 72h et visons un correctif ou une réponse
-motivée sous 30 jours selon la gravité.
+We acknowledge reports within 72 hours and aim for a fix or a substantive
+response within 30 days depending on severity.

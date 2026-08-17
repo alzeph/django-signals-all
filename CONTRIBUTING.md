@@ -1,18 +1,20 @@
-# Contribuer à django-signals-all
+# Contributing to django-signals-all
 
-Merci de vouloir contribuer ! Ce guide décrit comment mettre en place
-l'environnement de développement et les attentes pour une pull request.
+**English** | [Français](CONTRIBUTING.fr.md)
 
-## Mise en place
+Thanks for wanting to contribute! This guide describes how to set up the
+development environment and what is expected of a pull request.
 
-Le projet utilise [uv](https://docs.astral.sh/uv/) pour la gestion des
-dépendances et de l'environnement virtuel.
+## Setup
+
+The project uses [uv](https://docs.astral.sh/uv/) for dependency and virtual
+environment management.
 
 ```bash
 uv sync
 ```
 
-## Vérifications avant de proposer une PR
+## Checks before proposing a PR
 
 ```bash
 uv run ruff check src tests
@@ -21,9 +23,9 @@ uv run mypy
 uv run pytest --cov=django_signals_all --cov-report=term-missing
 ```
 
-La suite `pytest` tourne par défaut sur SQLite. Pour la faire tourner aussi
-contre PostgreSQL et MySQL (nécessaire pour toute modification du module
-`django_signals_all.sql`, dont le comportement dépend du dialecte SQL) :
+The `pytest` suite runs against SQLite by default. To also run it against
+PostgreSQL and MySQL (required for any change to the `django_signals_all.sql`
+module, whose behavior depends on the SQL dialect):
 
 ```bash
 docker compose up -d
@@ -31,67 +33,63 @@ DSA_TEST_DB=postgres uv run pytest
 DSA_TEST_DB=mysql uv run pytest
 ```
 
-Ces mêmes vérifications tournent dans la CI (`.github/workflows/ci.yml`) et
-doivent toutes passer avant qu'une PR soit mergeable :
+These same checks run in CI (`.github/workflows/ci.yml`) and must all pass
+before a PR is mergeable:
 
-- **ruff** : lint et formatage
-- **mypy** (`strict = true`, avec `django-stubs`) : le typage doit rester
-  précis, y compris sur le code qui touche à l'ORM et aux signaux Django
-- **pytest** : sur les trois SGBD supportés (SQLite, PostgreSQL, MySQL) et
-  contre Django 4.2/5.0/5.1/5.2 ; la couverture de tests est verrouillée à
-  100 % (`--cov-fail-under=100`) — toute nouvelle branche de code doit être
-  testée
+- **ruff**: lint and formatting
+- **mypy** (`strict = true`, with `django-stubs`): typing must stay precise,
+  including in code that touches the ORM and Django signals
+- **pytest**: against the three supported databases (SQLite, PostgreSQL,
+  MySQL) and against Django 4.2/5.0/5.1/5.2; test coverage is locked at 100%
+  (`--cov-fail-under=100`) — every new code branch must be tested
 
-Si `pre-commit` est installé (`uv run pre-commit install`), ruff et mypy
-tournent automatiquement avant chaque commit.
+If `pre-commit` is installed (`uv run pre-commit install`), ruff and mypy run
+automatically before each commit.
 
-## Compatibilité
+## Compatibility
 
-`django_signals_all` cible **Python 3.12+** et **Django 4.2+** (LTS
-courante et versions suivantes). Toute PR doit rester compatible avec ces
-versions minimales ; ne pas introduire de dépendance implicite à une
-version plus récente sans en discuter d'abord dans une issue.
+`django_signals_all` targets **Python 3.12+** and **Django 4.2+** (current LTS
+and later versions). Any PR must remain compatible with these minimum
+versions; do not introduce an implicit dependency on a newer version without
+discussing it in an issue first.
 
-## Style de code
+## Code style
 
-- Pas de commentaire qui explique le *quoi* (le code doit être lisible par
-  lui-même) — seulement le *pourquoi* quand c'est non évident (contraintes
-  cachées, comportement Django non documenté, contournement d'un bug connu).
-- Pas d'abstraction ou de fonctionnalité ajoutée au-delà de ce que demande
-  le changement.
-- Toute modification du module SQL brut (`django_signals_all.sql`) doit être
-  testée sur les trois SGBD : le comportement de `sqlglot` et des drivers
-  DB-API diverge réellement d'un dialecte à l'autre (voir les notes dans
+- No comment that explains the *what* (the code should be self-explanatory)
+  — only the *why* when it is non-obvious (hidden constraints, undocumented
+  Django behavior, workaround for a known bug).
+- No abstraction or feature added beyond what the change requires.
+- Any change to the raw SQL module (`django_signals_all.sql`) must be tested
+  against all three databases: the behavior of `sqlglot` and the DB-API
+  drivers genuinely diverges from one dialect to another (see the notes in
   `sql/engines/sqlglot_engine.py`).
 
-## Commits et PR
+## Commits and PRs
 
-- Un message de commit clair, qui explique le *pourquoi* du changement.
-- Une PR = un sujet. Préférer plusieurs petites PR à une seule PR fourre-tout.
-- Décrire dans la description de la PR ce qui change et comment c'est testé.
+- A clear commit message that explains the *why* of the change.
+- One PR = one subject. Prefer several small PRs over a single catch-all PR.
+- Describe in the PR description what changes and how it is tested.
 
-## Politique de compatibilité et dépréciation
+## Compatibility and deprecation policy
 
-`django_signals_all` suit le [Semantic Versioning](https://semver.org/lang/fr/).
-À partir de la version `1.0.0` :
+`django_signals_all` follows [Semantic Versioning](https://semver.org/).
+Starting with version `1.0.0`:
 
-- un **major** (`X.0.0`) peut casser la compatibilité ;
-- un **minor** (`1.X.0`) ajoute des fonctionnalités sans rien casser ;
-- un **patch** (`1.0.X`) ne contient que des corrections de bug.
+- a **major** (`X.0.0`) may break compatibility;
+- a **minor** (`1.X.0`) adds features without breaking anything;
+- a **patch** (`1.0.X`) contains only bug fixes.
 
-Avant `1.0.0` (versions `0.x.y`), aucune garantie de stabilité de l'API
-n'est donnée.
+Before `1.0.0` (versions `0.x.y`), no API stability guarantee is given.
 
-Après `1.0.0`, toute API publique dépréciée :
+After `1.0.0`, any deprecated public API:
 
-1. continue de fonctionner et lève un `DeprecationWarning` explicite
-   pendant au moins une version mineure complète ;
-2. est documentée dans `CHANGELOG.md` sous une section `### Deprecated` ;
-3. n'est retirée que dans un major suivant, jamais dans un minor ou un
-   patch.
+1. keeps working and raises an explicit `DeprecationWarning` for at least one
+   full minor version;
+2. is documented in `CHANGELOG.md` under a `### Deprecated` section;
+3. is only removed in a subsequent major version, never in a minor or patch.
 
-## Signaler un bug ou proposer une fonctionnalité
+## Reporting a bug or proposing a feature
 
-Ouvrez une [issue](https://github.com/alzeph/django-signals-all/issues) en
-utilisant le template approprié. Pour une faille de sécurité, voir
-[SECURITY.md](SECURITY.md) plutôt qu'une issue publique.
+Open an [issue](https://github.com/alzeph/django-signals-all/issues) using the
+appropriate template. For a security vulnerability, see
+[SECURITY.md](SECURITY.md) instead of a public issue.

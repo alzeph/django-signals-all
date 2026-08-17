@@ -1,20 +1,20 @@
-name: Proposition de fonctionnalité
-description: Proposer une amélioration ou une nouvelle fonctionnalité
+name: Feature request
+description: Propose an improvement or a new feature
 labels: ["enhancement"]
 body:
   - type: textarea
     id: problem
     attributes:
-      label: Quel problème cela résout-il ?
-      description: Quel besoin ou quelle limitation actuelle motive cette demande ?
+      label: What problem does this solve?
+      description: What need or current limitation motivates this request?
     validations:
       required: true
 
   - type: textarea
     id: proposal
     attributes:
-      label: Solution proposée
-      description: À quoi ressemblerait l'API ou le comportement souhaité ?
+      label: Proposed solution
+      description: What would the desired API or behavior look like?
       render: python
     validations:
       required: false
@@ -22,6 +22,6 @@ body:
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives envisagées
+      label: Alternatives considered
     validations:
       required: false
